@@ -98,7 +98,6 @@ int main() {
     CryptoPP::byte* feeByte = (CryptoPP::byte*) &fee;
     unsigned long secondLater7200 = (time(NULL) + 7200 - 1637848847) * 1000;
     CryptoPP::byte* deadline = (CryptoPP::byte*) &secondLater7200;
-
     string encodedAddress = "TBS2EI4K66LVQ57HMUFXYAJQGIFUR25Z4GTFZUI";
     string decodedAddress;
     Base32Decoder decoder;
@@ -115,18 +114,14 @@ int main() {
         decoder.Get((CryptoPP::byte*)&decodedAddress[0], decodedAddress.size());
     }
     const CryptoPP::byte* recipientAddress = (const CryptoPP::byte*) decodedAddress.data();
-
     unsigned char mosaicCount = 1;
     CryptoPP::byte* mosaicCountByte = (CryptoPP::byte*) &mosaicCount;
     unsigned long mosaicId = strtol("3A8416DB2D53B6C8", NULL, 16);
     CryptoPP::byte* mosaicIdByte = (CryptoPP::byte*) &mosaicId;
-
     unsigned long mosaicAmount = 100;
     CryptoPP::byte* mosaicAmountByte = (CryptoPP::byte*) &mosaicAmount;
-
     string message = "Hello Symbol!";
     string messageHex = stoh(message);
-
     unsigned short messageSize = message.length() + 1;
     CryptoPP::byte* messageSizeByte = (CryptoPP::byte*) &messageSize;
 
@@ -145,6 +140,7 @@ int main() {
     string verifiableString = "7fccd304802016bebbcd342a332f91ff1f3bb5e902988b352697be245f48e836"
                               + verifiableBody;
 
+    // 署名
     std::string signature;
     string verifiableStringBuffer;
     StringSource(verifiableString, true, new HexDecoder(new StringSink(verifiableStringBuffer)));
@@ -163,7 +159,6 @@ int main() {
                         + toHex(alicePublicKey, 32)
                         + "00000000"
                         + verifiableBody;
-
     cout << payloadString << endl;
 
     auto putJson = http_client(U("https://sym-test-02.opening-line.jp:3001"))
@@ -181,10 +176,10 @@ int main() {
         printf("Error exception:%s\n", e.what());
     }
 
+    // トランザクション確認
     string hashableBuffer;
     StringSource(toHex(signatureByte, 64) + toHex(alicePublicKey, 32) + verifiableString,
                  true, new HexDecoder(new StringSink(hashableBuffer)));
-
     SHA3_256 transactionHasher;
     CryptoPP::byte transactionHash[CryptoPP::SHA3_256::DIGESTSIZE];
     const CryptoPP::byte* hashableByte = (const CryptoPP::byte*) hashableBuffer.data();
