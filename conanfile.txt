@@ -1,0 +1,6 @@
+[requires]
+cryptopp/8.6.0
+cpprestsdk/2.10.18
+
+[generators]
+cmake
