@@ -24,13 +24,13 @@ string toHex(const CryptoPP::byte *source, int length) {
     StringSource (source, length, true,new HexEncoder(new StringSink(dist)));
     return dist;
 }
-std::string stoh(std::string const& in)
+string stoh(string const& in)
 {
-    std::ostringstream os;
+    ostringstream os;
     for(unsigned char const& c : in)
     {
-        os << std::hex << std::setprecision(2) << std::setw(2)
-           << std::setfill('0') << static_cast<int>(c);
+        os << hex << setprecision(2) << setw(2)
+           << setfill('0') << static_cast<int>(c);
     }
     return os.str();
 }
@@ -141,7 +141,7 @@ int main() {
                               + verifiableBody;
 
     // 署名
-    std::string signature;
+    string signature;
     string verifiableStringBuffer;
     StringSource(verifiableString, true, new HexDecoder(new StringSink(verifiableStringBuffer)));
     StringSource(verifiableStringBuffer, true, new SignerFilter(NullRNG(), *alice, new StringSink(signature)));
@@ -172,7 +172,7 @@ int main() {
             });
     try {
         putJson.wait();
-    } catch (const std::exception &e) {
+    } catch (const exception &e) {
         printf("Error exception:%s\n", e.what());
     }
 
